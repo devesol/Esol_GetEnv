@@ -1,5 +1,5 @@
 NAME
-    Esol::GetEnv - extract the environment value from /etc/environment
+    Esol::GetEnv - compile the environment value from system, /etc/environment,  apache envvars
 
 SYNOPSIS
       use Esol::GetEnv;
