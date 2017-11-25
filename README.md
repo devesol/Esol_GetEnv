@@ -4,7 +4,8 @@ NAME
 SYNOPSIS
       use Esol::GetEnv;
 
-      $env = getenv('myEnv');
+      $env = getenv('Env');
+      %env = getenv();
       
 DESCRIPTION
     Esol::GetEnv provides a facility for obtaining values of variable ENV as getenv of php do.
@@ -14,15 +15,42 @@ DESCRIPTION
     - variable Env defined in envvars of apache config files
   
     with perl you can only acces to system variable Env with following syntax : 
-    $path = $ENV{'PATH'}; 
+    $path = $ENV{'PATH'};
     
 METHODS
     getenv
-          $path = getenv('PATH');
-          
+        return value of key passed as parameter if there is.
+        return hash  if there is no parameter
+        $path = getenv('PATH');
+        %hash = getenv();
+    
+    setEnvironmentFilePath
+        default environmentFilePath is /etc/environment
+        this function allow to specify other filepath
+        
+    setApacheEnvironmentFilePath
+        default environmentFilePath is /etc/apache/envvars
+        this function allow to specify other filepath
+    
+    setHashEnvFromEnvironmentFilePath
+        add "key=value" to hash from filePath passed as parameter
+        exclude 
+            - lines in comment
+            - lines where key or value is empty
+        
+    setHashEnvFromSystemEnv
+        add "key=value" to hash from System Environment variable
+    
+    getStrWithoutExportFormStartOfLine
+        return string removing "Export " from start of str which is usage in environment files
+    
+    trim
+        return string removing white space form begining and ending of string
 
   EXPORT
     getenv
+    setEnvironmentFilePath
+    setApacheEnvironmentFilePath
 
 SEE ALSO
 
