@@ -1,17 +1,6 @@
 Esol-GetEnv version 0.01
 ========================
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
-
-A README file is required for CPAN modules since CPAN extracts the
-README file from a module distribution so that people browsing the
-archive can use it get an idea of the modules uses. It is usually a
-good idea to provide version information here so that people can
-decide whether fixes for the module are worth downloading.
-
 INSTALLATION
 
 To install this module type the following:
@@ -21,20 +10,83 @@ To install this module type the following:
    make test
    make install
 
+NAME
+      
+      Esol::GetEnv - compile the environment value from system, /etc/environment,  apache envvars
+
+SYNOPSIS
+      
+      use Esol::GetEnv;
+
+      $env = getenv('Env');
+      %env = getenv();
+      
+DESCRIPTION
+    
+    Esol::GetEnv provides a facility for obtaining values of variable ENV as getenv of php do.
+    With php you can access with getenv to : 
+    - system variable Env $_ENV["PATH"]
+    - variable Env defined in /etc/environment
+    - variable Env defined in envvars of apache config files
+  
+    with perl you can only acces to system variable Env with following syntax : 
+    $path = $ENV{'PATH'};
+    
+METHODS
+    
+    getenv
+        return value of key passed as parameter if there is.
+        return hash  if there is no parameter
+        $path = getenv('PATH');
+        %hash = getenv();
+    
+    setEnvironmentFilePath
+        default environmentFilePath is /etc/environment
+        this function allow to specify other filepath
+        
+    setApacheEnvironmentFilePath
+        default environmentFilePath is /etc/apache/envvars
+        this function allow to specify other filepath
+    
+    setHashEnvFromEnvironmentFilePath
+        add "key=value" to hash from filePath passed as parameter
+        exclude 
+            - lines in comment
+            - lines where key or value is empty
+        
+    setHashEnvFromSystemEnv
+        add "key=value" to hash from System Environment variable
+    
+    getStrWithoutExportFormStartOfLine
+        return string removing "Export " from start of str which is usage in environment files
+    
+    trim
+        return string removing white space form begining and ending of string
+
+EXPORT
+    
+    getenv
+    setEnvironmentFilePath
+    setApacheEnvironmentFilePath
+
+SEE ALSO
+
 DEPENDENCIES
+    
+    The Strict module is required
+    
+AUTHOR
+    
+    Cédric DELAMARRE, <cdelamarre@gmail.com>
 
-This module requires these other modules and libraries:
+CONTRIBUTORS
+    
+    Cédric DELAMARRE, <cdelamarre@gmail.com>
 
-  blah blah blah
+COPYRIGHT AND LICENSE
+    
+    Copyright 2017 E-Solutions SAS
 
-COPYRIGHT AND LICENCE
-
-Put the correct copyright and licence information here.
-
-Copyright (C) 2017 by root
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.14.2 or,
-at your option, any later version of Perl 5 you may have available.
-
+    This software is released under the GNU General Public License. You may
+    find a copy at http://www.gnu.org/licenses
 
