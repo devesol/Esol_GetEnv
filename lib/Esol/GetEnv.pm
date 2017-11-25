@@ -16,7 +16,7 @@ BEGIN {
 	 );
 }
 
-my $environmentFilePath  = "/etc/etc/environment";
+my $environmentFilePath  = "/etc/environment";
 my $apacheEnvironmentFilePath  = "/etc/apache2/envvars";
 my %hashEnv;
 
