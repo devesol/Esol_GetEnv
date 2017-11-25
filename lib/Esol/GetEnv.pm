@@ -11,36 +11,71 @@ BEGIN {
     @Esol::GetEnv::ISA       = qw(Exporter);
     @Esol::GetEnv::EXPORT    = qw( 
 		getenv
+		setEnvironmentFilePath
+		setApacheEnvironmentFilePath
 	 );
+}
+
+my $environmentFilePath  = "/etc/etc/environment";
+my $apacheEnvironmentFilePath  = "/etc/apache2/envvars";
+my %hashEnv;
+
+sub setEnvironmentFilePath{
+	my ($filePath) = @_;
+	$environmentFilePath = $filePath;
+}
+
+sub setApacheEnvironmentFilePath{
+	my ($filePath) = @_;
+	$apacheEnvironmentFilePath = $filePath;
 }
 
 sub getenv{
 	my ($envVar) = @_;
-	my $valueToReturn;
-	my $environmentFilePath  = "/etc/environment";
-
-	open(FIC,$environmentFilePath) or die "fichier introuvable";
-	my @fic = <FIC> ;
-	foreach my $line (@fic)
-	{
-		$line = &removeExportFormStartOfLine($line);
-		my @arrValue = split(/=/, $line);
-		my $key = &trim($arrValue[0]);
-		my $value = &trim($arrValue[1]);
-#		print $arrValue[0].":".$arrValue[0]."<br>";
-#		print $envVar."<>".$arrValue[0]."<br>";
-		if(length($valueToReturn) == 0){
-			if($key eq $envVar){
-				$valueToReturn = $value;
+	my $value;
+	
+	&setHashEnvFromEnvironmentFilePath($environmentFilePath);
+	&setHashEnvFromEnvironmentFilePath($apacheEnvironmentFilePath);
+	&setHashEnvFromSystemEnv;
+	
+	if($envVar eq ''){
+		return %hashEnv; 
+	}
+	foreach my $k (keys(%hashEnv)){
+		if(length($value) == 0){
+			if($k eq $envVar){
+				$value = $hashEnv{$k};
 			}
 		}
 	}
-	return $valueToReturn;	
-	close(FIC);
-
+	return $value;	
 }
 
-sub removeExportFormStartOfLine(){
+sub setHashEnvFromEnvironmentFilePath{
+	my ($filePath) = @_;
+	if(-e $filePath){
+		open(FIC,$filePath) or die "fichier introuvable";
+		my @fic = <FIC> ;
+		foreach my $line (@fic){
+			$line = &getStrWithoutExportFormStartOfLine($line);
+			my @arrValue = split(/=/, $line);
+			my $k = &trim($arrValue[0]);
+			my $v = &trim($arrValue[1]);
+			if($k ne '' && $v ne '' && $line !~ m/#/){
+				$hashEnv{$k} = $v;
+			}
+		}
+		close(FIC);
+	}
+}
+
+sub setHashEnvFromSystemEnv{
+	foreach my $k (keys(%ENV)){
+		$hashEnv{$k} = $ENV{$k};
+	}
+}
+
+sub getStrWithoutExportFormStartOfLine(){
 	my ($str) = @_;
 	$str =~ s/^\s*export//gi;
 	$str = &trim($str);
