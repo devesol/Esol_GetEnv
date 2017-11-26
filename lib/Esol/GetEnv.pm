@@ -1,8 +1,7 @@
-#!/usr/bin/perl
-
-use strict;
-
 package Esol::GetEnv;
+
+use 5.014002;
+use strict;
 
 require Exporter;
 BEGIN {
